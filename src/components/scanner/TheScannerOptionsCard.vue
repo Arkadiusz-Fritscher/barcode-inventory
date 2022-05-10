@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 const currentBarcode = ref(null);
-const isDialogOpen = ref(true);
+const isDialogOpen = ref(false);
 </script>
 
 <template>

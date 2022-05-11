@@ -1,3 +1,6 @@
+import auth from "src/router/middleware/auth";
+import log from "src/router/middleware/log";
+
 const routes = [
   {
     path: "/",
@@ -6,11 +9,17 @@ const routes = [
       {
         path: "",
         name: "home",
+        meta: {
+          middleware: [auth],
+        },
         component: () => import("pages/IndexPage.vue"),
       },
       {
         path: "/scanner",
         name: "scan",
+        meta: {
+          middleware: [auth],
+        },
         component: () => import("pages/ScannerPage.vue"),
       },
       {

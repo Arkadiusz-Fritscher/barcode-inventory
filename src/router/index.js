@@ -6,8 +6,7 @@ import {
   createWebHashHistory,
 } from "vue-router";
 import routes from "./routes";
-import auth from "src/middleware/auth";
-import log from "src/middleware/log";
+import { useStore } from "src/stores/store";
 
 /*
  * If not building with SSR mode, you can
@@ -35,10 +34,21 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  Router.beforeEach((to, from) => {
-    // canUserAccess() returns `true` or `false`
-    // const canAccess = await canUserAccess(to)
-    // if (!canAccess) return '/login'
+  Router.beforeEach((to, from, next) => {
+    if (!to.meta.middleware) {
+      next();
+      return;
+    }
+
+    const store = useStore();
+    const middleware = to.meta.middleware;
+
+    return middleware[0]({
+      to,
+      from,
+      next,
+      store,
+    });
   });
 
   return Router;

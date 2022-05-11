@@ -40,10 +40,27 @@
 
 <script setup>
 import { ref } from "vue";
+import { supabase } from "src/supabase";
+import { useStore } from "src/stores/store.js";
+
+const store = useStore();
 const username = ref("");
 const password = ref("");
 
-function login() {
+async function login() {
   console.log("login", username.value, password.value);
+  const { user, session, error } = await supabase.auth.signIn({
+    email: username.value,
+    password: password.value,
+  });
+
+  if (error) {
+    console.log("error", error);
+  } else {
+    console.log("user", user, session, error);
+    store.setUser(user);
+    store.setUserToken(session);
+    localStorage.set("refreshToken", session.refreshToken);
+  }
 }
 </script>
